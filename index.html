@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HerRight - A Legal Aid For Women</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f3ef;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(245, 243, 239, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1a1a;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:not(.btn-contact):hover {
+            color: #666;
+        }
+
+        .nav-links a:not(.btn-contact)::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #1a1a1a;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:not(.btn-contact):hover::after {
+            width: 100%;
+        }
+
+        .btn-contact {
+            background: #1a1a1a;
+            color: white !important;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-contact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #1a1a1a;
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 5% 4rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: #666;
+            max-width: 700px;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Image Carousel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .carousel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem 0;
+            position: relative;
+            height: 400px;
+        }
+
+        .carousel-item {
+            position: absolute;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .carousel-item.active {
+            z-index: 3;
+            transform: scale(1) translateX(0);
+            opacity: 1;
+            width: 400px;
+            height: 400px;
+        }
+
+        .carousel-item.left {
+            z-index: 2;
+            transform: scale(0.7) translateX(-300px);
+            opacity: 0.5;
+            width: 300px;
+            height: 300px;
+        }
+
+        .carousel-item.right {
+            z-index: 2;
+            transform: scale(0.7) translateX(300px);
+            opacity: 0.5;
+            width: 300px;
+            height: 300px;
+        }
+
+        .carousel-item.hidden {
+            opacity: 0;
+            transform: scale(0.5);
+            z-index: 1;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #d1d1d1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: #6366f1;
+            width: 30px;
+            border-radius: 5px;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-nav.prev {
+            left: 5%;
+        }
+
+        .carousel-nav.next {
+            right: 5%;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            animation: fadeInUp 0.8s ease both;
+            border-left: 4px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+            border-left-color: #1a1a1a;
+        }
+
+        .feature-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Case Forum Section */
+        .case-forum {
+            padding: 5rem 5%;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .cases-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #e8e8e8;
+            padding: 3rem;
+            border-radius: 30px;
+        }
+
+        .case-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        .case-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1.5rem;
+        }
+
+        .case-profile {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+
+        .case-info h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .case-info span {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .apply-btn {
+            background: #d1d1d1;
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .apply-btn:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .case-details {
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+
+        .case-details p {
+            margin: 0.5rem 0;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .case-title {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .case-status {
+            font-weight: 600;
+        }
+
+        /* Recommendations Section */
+        .recommendations {
+            padding: 5rem 5%;
+            background: #f5f3ef;
+        }
+
+        .recommendations-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #e8e8e8;
+            padding: 3rem;
+            border-radius: 30px;
+        }
+
+        .lawyer-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            animation: fadeInUp 0.8s ease both;
+            transition: all 0.3s ease;
+        }
+
+        .lawyer-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .lawyer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .lawyer-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .lawyer-actions button {
+            padding: 0.7rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .check-profile-btn {
+            background: #d1d1d1;
+            color: #1a1a1a;
+        }
+
+        .invite-btn {
+            background: #d1d1d1;
+            color: #1a1a1a;
+        }
+
+        .lawyer-actions button:hover {
+            background: #1a1a1a;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .match-badge {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .lawyer-description {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* Open Letter Section */
+        .open-letter {
+            padding: 5rem 5%;
+            background: white;
+        }
+
+        .letter-content {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease both;
+        }
+
+        .letter-content h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .letter-content p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .letter-signature {
+            margin-top: 3rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* Footer */
+        footer {
+            background: #4a4a4a;
+            color: white;
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-cta {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .footer-cta h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-section a {
+            display: block;
+            color: #ccc;
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: white;
+            color: #4a4a4a;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                flex-direction: column;
+                background: rgba(245, 243, 239, 0.98);
+                backdrop-filter: blur(10px);
+                padding: 2rem;
+                transition: left 0.3s ease;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .carousel {
+                height: 300px;
+            }
+
+            .carousel-item.active {
+                width: 300px;
+                height: 300px;
+            }
+
+            .carousel-item.left,
+            .carousel-item.right {
+                width: 200px;
+                height: 200px;
+                transform: scale(0.6);
+            }
+
+            .carousel-nav {
+                width: 35px;
+                height: 35px;
+            }
+
+            .cases-container,
+            .recommendations-container {
+                padding: 1.5rem;
+            }
+
+            .case-header,
+            .lawyer-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .lawyer-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .lawyer-actions button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 1rem 5%;
+            }
+
+            .carousel-item.active {
+                width: 250px;
+                height: 250px;
+            }
+
+            .carousel-item.left,
+            .carousel-item.right {
+                display: none;
+            }
+        }
+
+        /* Scroll animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">⚡</div>
+            <span>HerRight</span>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#register">Register</a>
+            <a href="#about">About</a>
+            <a href="#case-forum">Case Forum</a>
+            <a href="#recommendations">Recommendation</a>
+            <a href="#contact" class="btn-contact">Contact us</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>A Legal<br>Aid For Women.</h1>
+        <p>Smart, accessible, and justice-driven, we make legal help easier for every woman to reach.</p>
+        
+        <div class="carousel-container">
+            <button class="carousel-nav prev" onclick="changeSlide(-1)">‹</button>
+            <div class="carousel">
+                <div class="carousel-item active">
+                    <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=600&fit=crop" alt="Professional woman">
+                </div>
+                <div class="carousel-item right">
+                    <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&h=600&fit=crop" alt="Mountain landscape">
+                </div>
+                <div class="carousel-item hidden">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop" alt="Ocean view">
+                </div>
+                <div class="carousel-item hidden">
+                    <img src="https://images.unsplash.com/photo-1551836022-4c4c79ecde51?w=600&h=600&fit=crop" alt="Sunset mountains">
+                </div>
+                <div class="carousel-item left">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=600&fit=crop" alt="Nature scene">
+                </div>
+            </div>
+            <button class="carousel-nav next" onclick="changeSlide(1)">›</button>
+            <div class="carousel-dots">
+                <span class="dot active" onclick="goToSlide(0)"></span>
+                <span class="dot" onclick="goToSlide(1)"></span>
+                <span class="dot" onclick="goToSlide(2)"></span>
+                <span class="dot" onclick="goToSlide(3)"></span>
+                <span class="dot" onclick="goToSlide(4)"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="feature-card scroll-reveal">
+            <h3>Legal help that listens.</h3>
+            <p>We understand every woman's story is different. Our team provides personal, confidential guidance to help you take the first step toward justice.</p>
+        </div>
+        <div class="feature-card scroll-reveal">
+            <h3>From advice to action.</h3>
+            <p>We don't just consult — we represent. Our lawyers stand beside you in court, ensuring your voice is heard and your rights are protected.</p>
+        </div>
+    </section>
+
+    <!-- Case Forum Section -->
+    <section class="case-forum" id="case-forum">
+        <div class="section-header">
+            <h2>Case Forum</h2>
+            <p>A safe space for women to share their legal experiences and get support.</p>
+        </div>
+
+        <div class="cases-container">
+            <div class="case-card scroll-reveal">
+                <div class="case-header">
+                    <div class="case-profile">
+                        <div class="avatar"></div>
+                        <div class="case-info">
+                            <h4>Amna Sheikh</h4>
+                            <span>Teacher, Islamabad</span>
+                        </div>
+                    </div>
+                    <button class="apply-btn">Apply</button>
+                </div>
+                <div class="case-details">
+                    <p class="case-title">Case Title: Workplace Harassment Complaint</p>
+                    <p class="case-status">Status: Ongoing</p>
+                    <p>Filed against a manager for verbal harassment. Legal notice issued under workplace safety laws.</p>
+                </div>
+            </div>
+
+            <div class="case-card scroll-reveal">
+                <div class="case-header">
+                    <div class="case-profile">
+                        <div class="avatar"></div>
+                        <div class="case-info">
+                            <h4>Noor Ahmed</h4>
+                            <span>House Wife</span>
+                        </div>
+                    </div>
+                    <button class="apply-btn">Apply</button>
+                </div>
+                <div class="case-details">
+                    <p class="case-title">Divorced - Mother of One</p>
+                    <p class="case-status">Status: Open for Legal Assistance</p>
+                    <p>Noor was divorced six months ago and hasn't received any financial support from her ex-husband since then. She is seeking legal help to claim her monthly maintenance and child support under family law.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommendations Section -->
+    <section class="recommendations" id="recommendations">
+        <div class="section-header">
+            <h2>Our Recommendations</h2>
+            <p>Connecting you with verified, skilled lawyers ready to handle your case with care and confidence.</p>
+        </div>
+
+        <div class="recommendations-container">
+            <div class="lawyer-card scroll-reveal">
+                <div class="lawyer-header">
+                    <div class="case-profile">
+                        <div class="avatar"></div>
+                        <div class="case-info">
+                            <h4>Uzafir Shah</h4>
+                            <span>Lawyer | Consultant</span>
+                        </div>
+                    </div>
+                    <div class="lawyer-actions">
+                        <button class="check-profile-btn">Check Profile</button>
+                        <button class="invite-btn">Invite to apply</button>
+                    </div>
+                </div>
+                <div class="case-details">
+                    <p class="match-badge">Excellent Match | Highly Likely to move</p>
+                    <p class="lawyer-description">Uzafir Shah has over 6 years of experience handling family and domestic cases. Dedicated to protecting women's rights and ensuring justice with empathy and professionalism.</p>
+                </div>
+            </div>
+
+            <div class="lawyer-card scroll-reveal">
+                <div class="lawyer-header">
+                    <div class="case-profile">
+                        <div class="avatar"></div>
+                        <div class="case-info">
+                            <h4>Aiman Khalid</h4>
+                            <span>Lawyer | Consultant</span>
+                        </div>
+                    </div>
+                    <div class="lawyer-actions">
+                        <button class="check-profile-btn">Check Profile</button>
+                        <button class="invite-btn">Invite to apply</button>
+                    </div>
+                </div>
+                <div class="case-details">
+                    <p class="match-badge">Good Match | Likely to move</p>
+                    <p class="lawyer-description">Aiman Khalid has over 2 years of experience handling family cases. Dedicated to protecting women's rights and ensuring justice with empathy and professionalism.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Letter Section -->
+    <section class="open-letter">
+        <div class="letter-content scroll-reveal">
+            <h2>An open letter from the HerRight Team — the future of justice is women-first.</h2>
+            
+            <p>The future of justice must be women-first. While the world automates support systems, we choose a different path — one where technology strengthens human connection instead of replacing it.</p>
+            
+            <p>HerRight was built to make legal help simple, safe, and compassionate. We automate the tiring steps so our team and lawyers can focus on what matters: listening, guiding, and standing beside women who need support.</p>
+            
+            <p>This is legal aid reimagined — where every woman is seen, heard, and protected.</p>
+            
+            <p class="letter-signature">The HerRight Team</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-cta">
+            <h3>A safe, confidential, and supportive platform<br>for women seeking legal help.</h3>
+        </div>
+
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>HerRight</h4>
+                <a href="#about">About Us</a>
+                <a href="#mission">Our Mission</a>
+                <a href="#privacy">Privacy Policy</a>
+            </div>
+
+            <div class="footer-section">
+                <h4>Explore</h4>
+                <a href="#case-forum">Case Forum</a>
+                <a href="#recommendations">Recommendations</a>
+                <a href="#submit">Submit Your Case</a>
+                <a href="#register">Register</a>
+            </div>
+
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <a href="mailto:support@herright.org">support@herright.org</a>
+                <a href="tel:+923001234567">+92 300 1234567</a>
+                <p style="color: #ccc; margin-top: 1rem;">Islamabad, Pakistan</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Instagram">📷</a>
+                    <a href="#" aria-label="Facebook">👤</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const dots = document.querySelectorAll('.dot');
+
+        function updateCarousel() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'left', 'right', 'hidden');
+                
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index === (currentSlide - 1 + slides.length) % slides.length) {
+                    slide.classList.add('left');
+                } else if (index === (currentSlide + 1) % slides.length) {
+                    slide.classList.add('right');
+                } else {
+                    slide.classList.add('hidden');
+                }
+            });
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            updateCarousel();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            nav
